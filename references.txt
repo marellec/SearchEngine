@@ -1,0 +1,5 @@
+Indexing (getting cosine similarites vector from inverted index and query vector)
+https://stackoverflow.com/questions/68003003/python-sklearn-tfidfvectorizer-vectorize-documents-ahead-of-query-for-semantic
+
+Scraping (setting start_urls and other class variables as parameters)
+https://stackoverflow.com/questions/48042872/python-scrapy-creating-a-crawler-that-gets-a-list-of-urls-and-crawls-them

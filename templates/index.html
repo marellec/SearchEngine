@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+
+<html xml:lang="en" lang="en">
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    
+	<meta charset="utf-8">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+	<title>Search Engine</title>
+    
+	<meta name="description" content="Search Engin'.">
+
+	<!-- <link rel="stylesheet" type="text/css" media="screen" href="./css/styling.css"> -->
+
+</head>
+
+<body>
+    <header>
+        <h1>this is a search engine</h1>
+    </header>
+    <form action = "{{ url_for("enter_query") }}" method = "POST">
+        <p>search here!</p>
+        <input type = "text" name = "query" value = "" placeholder="words..." />
+        <input type = "number" name = "k_value" value = 5 placeholder="k..." />
+        <input type = "submit" value = "go" />
+    </form>
+</body>
