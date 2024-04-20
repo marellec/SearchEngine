@@ -1,5 +1,8 @@
 __pycache__/
- *.pyc
+*.pyc
+
+**/test*
+**/test/
 
 .DS_Store
 
