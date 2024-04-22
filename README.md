@@ -107,7 +107,10 @@ Harness
 
 Coverage 
 
+Test corpora/indexes: 
 
+* Files in `corpus/` and `index/` prefixed with "one_test"
+* Files in `corpus/` and `index/` prefixed with "small_test"
 
 
 ## Data Sources
@@ -116,13 +119,17 @@ Data Sources - Links, downloads, access information.
 
 Pages are open source.
 
-[Start_url_for_default_build]()
-[Start_url_for_one_test]()
-[Start_url_for_small_test]()
+Links
 
-[data_for_default_build]()
-[data_for_one_test]()
-[data_for_small_test](corpus/small_test_items.jsonl)
+* [Start_url_for_default_build]()
+* [Start_url_for_one_test](https://en.wikipedia.org/wiki/Whale)
+* [Start_url_for_small_test]("https://en.wikipedia.org/wiki/List_of_common_misconceptions)
+
+Downloads
+
+* [data_for_default_build]()
+* [data_for_one_test](corpus/one_test_items.jsonl)
+* [data_for_small_test](corpus/small_test_items.jsonl)
 
 ## Resources
 

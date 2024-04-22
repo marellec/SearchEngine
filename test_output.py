@@ -1,5 +1,4 @@
 import pytest
-from pathlib import Path
 
 import re
 
@@ -19,8 +18,6 @@ from webapp import (
     enter_query_routename
 )
 from documents import get_build_from_prefix, get_build_from_prefixes
-
-import build
 
 @pytest.fixture()
 def app():
@@ -69,7 +66,7 @@ def url_spaces(url):
 
 class TestSampleSet:
 
-    def test_one(self, app):
+    def test_query_one(self, app):
         
         """
             100 docs
@@ -79,13 +76,35 @@ class TestSampleSet:
         set_app_data_from_prefix(app, save_filename_prefix)
         
         
-        query_str = "written language"
+        query_str = "uhh"
         k = 5
         
         res = get_results(app, query_str, k)
         
         result_comment = res["result_comment"]
         results = res["results"]
+        
+        
+        
+    def test_query_one(self, app):
+        
+        """
+            100 docs
+        """
+        
+        save_filename_prefix = "one_test"
+        set_app_data_from_prefix(app, save_filename_prefix)
+        
+        
+        query_str = "uhh"
+        k = 5
+        
+        res = get_results(app, query_str, k)
+        
+        result_comment = res["result_comment"]
+        results = res["results"]
+        
+        
         
         
         
