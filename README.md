@@ -112,6 +112,8 @@ Test corpora/indexes:
 * Files in `corpus/` and `index/` prefixed with "one_test"
 * Files in `corpus/` and `index/` prefixed with "small_test"
 
+[Coverage_report](https://html-preview.github.io/?url=https://github.com/marellec/SearchEngine/blob/main/coverage_re/index.html)
+
 
 ## Data Sources
 
