@@ -1,10 +1,22 @@
 # Project Title
 
-Simple overview of use/purpose.
+Abstract - Development summary, objectives, and next steps.
 
 ## Description
 
-An in-depth paragraph about your project and overview of use.
+Overview - Solution outline, relevant literature, proposed system.
+
+## Design
+
+Design - System capabilities, interactions, integration.
+
+
+
+## Architecture
+ 
+Architecture - Software components, interfaces, implementation.
+
+
 
 ## Getting Started
 
@@ -26,32 +38,33 @@ An in-depth paragraph about your project and overview of use.
 code blocks for commands
 ```
 
-<!-- ## Help
+## Conclusion
 
-Any advice for common problems or issues.
-```
-command to run if program contains helper info
-``` -->
+Conclusion - Success/Failure results, outputs, caveats/cautions.
+
+
+### Test Cases
+
+Test Cases - Framework, harness, coverage.
+
+
+
+
+## Data Sources
+
+Data Sources - Links, downloads, access information.
+
+
+## Resources
+
+* [README-Template](https://gist.github.com/DomPizzie/7a5ff55ffa9081f2de27c315f5018afc)
+
+
+
+## Bibliography (References)
+
+
 
 ## Authors
 
-Marelle Leon 
-[@DomPizzie](https://twitter.com/dompizzie)
-
-<!-- ## Version History
-
-* 0.2
-    * Various bug fixes and optimizations
-    * See [commit change]() or See [release history]()
-* 0.1
-    * Initial Release -->
-
-<!-- ## License
-
-This project is licensed under the [NAME HERE] License - see the LICENSE.md file for details -->
-
-## Acknowledgments
-
-Inspiration, code snippets, etc.
-
-* [README-Template](https://gist.github.com/DomPizzie/7a5ff55ffa9081f2de27c315f5018afc)
+Marelle Leon

@@ -16,10 +16,10 @@ def get_corpus_filepath(corpus_filename):
 
 def scrape(corpus_filename, start_url, max_pages=100, max_depth=3, overwrite=True):
     
-    print("scraping starting from", start_url, "...")
     print("max pages =", max_pages)
     print("max depth =", max_depth)
     print("overwrite =", overwrite)
+    print("scraping starting from", start_url, "...")
     
     ua = UserAgent()
     
