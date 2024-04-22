@@ -41,12 +41,15 @@ Libraries (specifics in requirements.txt)
 
 ### Installing
 
+inputs, installation
+
 * How/where to download your program
 * Any modifications needed to be made to files/folders
 
-### Operation - Running program
 
-Software commands, inputs, installation
+
+
+### Executing program
 
 The following 2 search engine apps are available:
 * webapp.py
