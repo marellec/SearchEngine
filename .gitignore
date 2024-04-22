@@ -1,9 +1,11 @@
 __pycache__/
 *.pyc
 
+env/
+
 **/test*
 **/test/
 
 .DS_Store
 
-todo
+todo*

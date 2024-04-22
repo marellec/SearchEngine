@@ -5,9 +5,19 @@ from sklearn.metrics.pairwise import linear_kernel
 
 def get_top_k_inds_by_score(index_filename, query_str, k=5):
     
+    if query_str.strip() == "": # empty query
+        return None
+    
+    # print("query: ", query_str)
+    
     (vectorizer, doc_vectors) = load_inverted_index(index_filename)
 
     query_vector = vectorizer.transform([query_str])
+    
+    # print("query_vector size: ", query_vector.nnz)
+    
+    if query_vector.nnz == 0: # no terms in query
+        return []
 
     #####   STOLEN FROM https://stackoverflow.com/questions/68003003/python-sklearn-tfidfvectorizer-vectorize-documents-ahead-of-query-for-semantic
 

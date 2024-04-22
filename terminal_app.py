@@ -30,12 +30,24 @@ def run(corpus_filename, index_filename):
             
         top_k_inds_by_score = get_top_k_inds_by_score(index_filename, query_str, k)
         
-        for n, i in enumerate(top_k_inds_by_score, 1):
-            doc = load_document(corpus_filename, i)
-            print("\nresult ", n, ":", "\t", doc["url"], " [", i+1, "]", sep="")
-            print("\n", doc["text"][:500], "...", sep="")
-            
-        cont = input("\nTo continue, enter 'y': ").lower() == 'y'
+        if top_k_inds_by_score is None: # invalid query
+            print("\nsorry, invalid query could not be searched. try again!")
+        else:
+            if len(top_k_inds_by_score) < k:
+                print(
+                    "\nSorry, no results found. Try another query!" 
+                    if len(top_k_inds_by_score) == 0 else 
+                    (f"\nLess than k={k} results found. Showing " +
+                    str(len(top_k_inds_by_score)) +
+                    " results.")
+                )
+        
+            for n, i in enumerate(top_k_inds_by_score, 1):
+                doc = load_document(corpus_filename, i)
+                print("\nresult ", n, ":", "\t", doc["url"], " [", i+1, "]", sep="")
+                print("\n", doc["text"][:500], "...", sep="")
+                
+            cont = input("\nTo continue, enter 'y': ").lower() == 'y'
     
         
         

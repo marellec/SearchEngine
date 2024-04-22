@@ -47,6 +47,8 @@ class SearchSpider(scrapy.Spider):
         
         # normalize space
         text = re.sub(r'[\s\n\t]+', ' ', ' '.join(paragraphs))
+        # separate numbers inside words
+        text = re.sub(r'(?<=[a-zA-Z])([\d]+([^a-zA-Z\s]*[\d]+)*)(?=[a-zA-Z])', r' \1 ', text)
         # get rid of non-ascii chars
         
         # print("\n\n")

@@ -7,13 +7,21 @@ from documents import load_documents_text
 
 def temp_tokenizer(text: str) -> list[str]:
     toks = re.split(r"\s", text)
-    toks = [s for s in toks if len(s) > 0]
+    toks = [
+        s for s in toks 
+        # filter out empty tokens
+        if len(s) > 0
+    ]
     return toks
 
 def temp_preprocessor(text: str) -> str:
     text = text.strip()
-    text = re.sub(r'[^a-zA-Z0-9_\-\s]', '', text)
-    text = "".join(ch for ch in text if ord(ch) <= 127)
+    # remove everything except letters, numbers, and '-'
+    text = re.sub(r'[^a-zA-Z0-9\-\s]', ' ', text) 
+    # apply lowercasing
+    text = text.lower() 
+    # remove non-ascii chars
+    text = "".join(ch for ch in text if ord(ch) <= 127) 
     return text
 
 # construct filepath from filename
@@ -41,7 +49,8 @@ def build_inverted_index(corpus_filename, index_filename):
     
     vectorizer = TfidfVectorizer(
         preprocessor=temp_preprocessor, 
-        tokenizer=temp_tokenizer
+        tokenizer=temp_tokenizer,
+        token_pattern=None
     )
 
     doc_vectors = vectorizer.fit_transform(documents)

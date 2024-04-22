@@ -45,11 +45,24 @@ def view_results(query_str, k):
     # get results from query processor
     top_k_inds_by_score = get_top_k_inds_by_score(app.config["index_filename"], query_str, k)
     
+    result_comment = ""
     results = []
-
-    for n, i in enumerate(top_k_inds_by_score, 1):
-        doc = load_document(app.config["corpus_filename"], i)
-        results.append((n, doc["url"], doc["text"][:250] + "..."))
+    
+    if top_k_inds_by_score is None: # invalid query
+        result_comment = "Sorry, invalid query could not be searched. Try again!"
+    else:
+        for n, i in enumerate(top_k_inds_by_score, 1):
+            doc = load_document(app.config["corpus_filename"], i)
+            results.append((n, doc["url"], doc["text"][:250] + "..."))
+        
+        if len(results) < k:
+            result_comment = (
+                "Sorry, no results found. Try another query!" 
+                if len(results) == 0 else 
+                (f"Less than k={k} results found. Showing " +
+                str(len(results)) +
+                " results.")
+            )
     
     # results = [
     #     (1, url_for(home_routename), "this is result 1..." + query_str),
@@ -59,9 +72,20 @@ def view_results(query_str, k):
     
     return render_template(
         view_results_filename + ".html", 
+        result_comment=result_comment,
         query=query_str,
         k_value=k,
         results=results
+    )
+    
+@app.route("/" + view_results_routename + "//<int:k>")
+def empty_query(k):
+    return render_template(
+        view_results_filename + ".html", 
+        result_comment="",
+        query="",
+        k_value=k,
+        results=[]
     )
 
 

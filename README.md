@@ -22,8 +22,19 @@ Architecture - Software components, interfaces, implementation.
 
 ### Dependencies
 
-* Describe any prerequisites, libraries, OS version, etc., needed before installing program.
-* ex. Windows 10
+OS used
+
+* MacOS
+
+Libraries (specifics in requirements.txt)
+
+* python                    3.12.2
+* fake-useragent            1.5.1
+* flask                     2.2.5
+* justext                   3.0.0
+* numpy                     1.26.4
+* scikit-learn              1.3.0
+* scrapy                    2.11.1
 
 ### Installing
 
