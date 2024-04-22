@@ -122,7 +122,7 @@ Pages are open source.
 
 [data_for_default_build]()
 [data_for_one_test]()
-[data_for_small_test](corpus/small_test_items.json)
+[data_for_small_test](corpus/small_test_items.jsonl)
 
 ## Resources
 
