@@ -26,9 +26,12 @@ OS used
 
 * MacOS
 
-Libraries (specifics in requirements.txt)
+Python version
 
 * python                    3.12.2
+
+Libraries (specifics in requirements.txt)
+
 * fake-useragent            1.5.1
 * flask                     2.2.5
 * justext                   3.0.0
