@@ -11,6 +11,9 @@ def get_top_k_inds_by_score(index_filename, query_str, k=5):
     # print("query: ", query_str)
     
     (vectorizer, doc_vectors) = load_inverted_index(index_filename)
+    
+    if k > doc_vectors.shape[0]:
+        k = doc_vectors.shape[0]
 
     query_vector = vectorizer.transform([query_str])
     

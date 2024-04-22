@@ -24,7 +24,7 @@ def number_of_documents(corpus_filename):
         return 0
     
     with open(get_corpus_filepath(corpus_filename), "r") as f:
-        i = -1
+        i = 0
         for _ in f: i += 1
         return i
 

@@ -51,11 +51,33 @@ inputs, installation
 
 ### Executing program
 
+To scrape the web to download a new corpus and build a corresponding index, specify
+seed URL/Domain, max pages, and max depth:
+```
+python build.py <start_url> <max_pages> <max_depth>
+```
+
+Optionally, specify a save filename prefix for saving the corpus and index to files:
+```
+python build.py <start_url> <max_pages> <max_depth> <save_filename_prefix>
+```
+
 The following 2 search engine apps are available:
 * webapp.py
 * terminal_app.py
 
-To scrape the web to download a new corpus, specify
+After downloading the corpus and building the index, to run an app, run:
+```
+python <app>
+```
+
+To run an app on a specified downloaded corpus and built index, simply run:
+```
+python <app> <save_filename_prefix>
+```
+This will use the corpus and corresponding index starting with the given prefix.
+
+<!-- To scrape the web to download a new corpus, specify
 seed URL/Domain, max pages, and max depth:
 ```
 python <app> <start_url> <max_pages> <max_depth>
@@ -70,7 +92,7 @@ To run the app without downloading a new corpus (and building a new index), simp
 ```
 python <app> -n <save_filename_prefix>
 ```
-This will use the index corresponding to the corpus starting with the given prefix.
+This will use the index corresponding to the corpus starting with the given prefix. -->
 
 
 ## Conclusion
@@ -105,6 +127,7 @@ Data Sources - Links, downloads, access information.
 
 ## Resources
 
+* [justext](https://github.com/miso-belica/jusText)
 * [README-Template](https://gist.github.com/DomPizzie/7a5ff55ffa9081f2de27c315f5018afc)
 
 

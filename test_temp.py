@@ -1,4 +1,6 @@
 
+import build
+
 class TestClass1:
     value = 0
 

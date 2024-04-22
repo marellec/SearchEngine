@@ -4,8 +4,7 @@ from pathlib import Path
 path = str(Path(__file__).parent.parent)
 sys.path.insert(1, path)
 
-from cli import get_cli_options
-from build import build_search_engine
+from cli import get_run_cli_build
 from processor.query_processor import get_top_k_inds_by_score
 from documents import load_document
 
@@ -43,34 +42,47 @@ def enter_query():
     if request.method == "POST":
         query_str = request.form["query"]
         k = request.form["k_value"]
-        return redirect(url_for(view_results_routename, query_str=query_str, k=k))
+        try: 
+            k = int(k)
+            valid_k = k > 0
+        except ValueError:
+            return view_results(query_str, k)
+            
+        if valid_k:
+            return redirect(url_for(view_results_routename, query_str=query_str, k=k))
+        else:
+            return view_results(query_str, k)
+            
     else:
         return redirect(request.referrer)
 
 @app.route("/" + view_results_routename + "/<query_str>/<int:k>")
 def view_results(query_str, k):
     
-    # get results from query processor
-    top_k_inds_by_score = get_top_k_inds_by_score(app.config["index_filename"], query_str, k)
-    
     result_comment = ""
     results = []
     
-    if top_k_inds_by_score is None: # invalid query
-        result_comment = "Sorry, invalid query could not be searched. Try again!"
-    else:
-        for n, i in enumerate(top_k_inds_by_score, 1):
-            doc = load_document(app.config["corpus_filename"], i)
-            results.append((n, doc["url"], doc["text"][:250] + "..."))
+    if k > 0:
+        # get results from query processor
+        top_k_inds_by_score = get_top_k_inds_by_score(app.config["index_filename"], query_str, k)
         
-        if len(results) < k:
-            result_comment = (
-                "Sorry, no results found. Try another query!" 
-                if len(results) == 0 else 
-                (f"Less than k={k} results found. Showing " +
-                str(len(results)) +
-                " results.")
-            )
+        if top_k_inds_by_score is None: # invalid query
+            result_comment = "Sorry, invalid query could not be searched. Try again!"
+        else:
+            for n, i in enumerate(top_k_inds_by_score, 1):
+                doc = load_document(app.config["corpus_filename"], i)
+                results.append((n, doc["url"], doc["text"][:250] + "..."))
+            
+            if len(results) < k:
+                result_comment = (
+                    "Sorry, no results found. Try another query!" 
+                    if len(results) == 0 else 
+                    (f"Less than k={k} results found. Showing " +
+                    str(len(results)) +
+                    " results.")
+                )
+    else:
+        result_comment = "Sorry, invalid number of results. Try again!"
     
     # results = [
     #     (1, url_for(home_routename), "this is result 1..." + query_str),
@@ -100,22 +112,19 @@ def empty_query(k):
 
 if __name__ == "__main__":
     
-    options = get_cli_options(sys.argv)
-    
-    if options is not None:
-        build = build_search_engine(*options)
-        if build is not None:
-            (corpus_filename, index_filename) = build
-            app.config["corpus_filename"] = corpus_filename
-            app.config["index_filename"] = index_filename
-            
-            Timer(1, open_browser).start()
-            logging.getLogger('werkzeug').disabled = True
-            app.run(
-                host='0.0.0.0', 
-                port=8080, 
-                # debug = True, 
-                use_reloader=False
-            )
+    build = get_run_cli_build(sys.argv)
+    if build is not None:
+        (corpus_filename, index_filename) = build
+        app.config["corpus_filename"] = corpus_filename
+        app.config["index_filename"] = index_filename
+        
+        Timer(1, open_browser).start()
+        logging.getLogger('werkzeug').disabled = True
+        app.run(
+            host='0.0.0.0', 
+            port=8080, 
+            # debug = True, 
+            use_reloader=False
+        )
             
             

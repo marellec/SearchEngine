@@ -18,7 +18,7 @@ def scrape(corpus_filename, start_url, max_pages=100, max_depth=3, overwrite=Tru
     
     print("max pages =", max_pages)
     print("max depth =", max_depth)
-    print("overwrite =", overwrite)
+    # print("overwrite =", overwrite)
     print("scraping starting from", start_url, "...")
     
     ua = UserAgent()

@@ -3,3 +3,6 @@ https://stackoverflow.com/questions/68003003/python-sklearn-tfidfvectorizer-vect
 
 Scraping (setting start_urls and other class variables as parameters)
 https://stackoverflow.com/questions/48042872/python-scrapy-creating-a-crawler-that-gets-a-list-of-urls-and-crawls-them
+
+Flask (open web browser)
+https://stackoverflow.com/questions/54235347/open-browser-automatically-when-python-code-is-executed

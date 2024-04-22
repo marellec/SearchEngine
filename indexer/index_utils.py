@@ -1,8 +1,11 @@
+import os
 import re
 from sklearn.feature_extraction.text import TfidfVectorizer
 from pathlib import Path
 import pickle
 from documents import load_documents_text
+import scipy
+
 
 
 def temp_tokenizer(text: str) -> list[str]:
@@ -42,6 +45,21 @@ def save_inverted_index(index_filename, inverted_index):
 def load_inverted_index(index_filename):
     with open(get_save_filepath(index_filename), 'rb') as f:
         return pickle.load(f)
+    
+def valid_index(index_filename):
+    is_file = os.path.isfile(get_save_filepath(index_filename))
+    if is_file:
+        try:
+            inverted_index = load_inverted_index(index_filename)
+            return (
+                type(inverted_index) == tuple and 
+                len(inverted_index) == 2 and
+                type(inverted_index[0]) == TfidfVectorizer and
+                type(inverted_index[1]) == scipy.sparse._csr.csr_matrix
+            )
+        except EOFError:
+            return False
+    return False
 
 def build_inverted_index(corpus_filename, index_filename):
     

@@ -1,6 +1,5 @@
 import sys
-from cli import get_cli_options
-from build import build_search_engine
+from cli import get_run_cli_build
 from processor.query_processor import get_top_k_inds_by_score
 from documents import load_document
     
@@ -20,7 +19,7 @@ def run(corpus_filename, index_filename):
             
             try: 
                 k = int(k)
-                valid_k = True
+                valid_k = k > 0
             except ValueError: print("\nsorry, invalid number of results, try again!\n")
         
             
@@ -53,10 +52,7 @@ def run(corpus_filename, index_filename):
         
 if __name__ == "__main__":
     
-    options = get_cli_options(sys.argv)
-    
-    if options is not None:
-        build = build_search_engine(*options)
-        if build is not None:
-            (corpus_filename, index_filename) = build
-            run(corpus_filename, index_filename)
+    build = get_run_cli_build(sys.argv)
+    if build is not None:
+        (corpus_filename, index_filename) = build
+        run(corpus_filename, index_filename)
