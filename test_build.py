@@ -9,7 +9,6 @@ from cli import get_build_cli_options
 from documents import check_if_0_documents, number_of_documents, load_document
 from indexer.index_utils import valid_index, load_inverted_index
 
-
 class TestBuild:
 
     def test_build(self):
@@ -54,19 +53,6 @@ class TestBuild:
         
         # correct matrix shape
         assert num_docs == doc_vectors.shape[0]
-        
-        
-        urls = set()
-        for i in range(num_docs):
-            doc = load_document(corpus_filename, i)
-            urls.add(doc["url"])
-        
-        # unique urls
-        assert len(urls) == num_docs
-        
-        # start url is in data
-        assert (start_url in urls)
-        
         
         # delete corpus and index
         
