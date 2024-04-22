@@ -14,6 +14,11 @@ from flask import render_template
 from flask import request
 from flask import redirect, url_for
 
+import logging
+
+import webbrowser
+from threading import Timer
+
 app = Flask(__name__)
 
 # template_folder_prefix = "templates/"
@@ -23,6 +28,9 @@ view_results_filename = "view_results"
 
 view_results_routename = "view_results"
 enter_query_routename = "enter_query"
+
+def open_browser():
+    webbrowser.open_new("http://127.0.0.1:8080")
 
 @app.route("/")
 @app.route("/" + home_routename)
@@ -101,4 +109,13 @@ if __name__ == "__main__":
             app.config["corpus_filename"] = corpus_filename
             app.config["index_filename"] = index_filename
             
-            app.run(host="0.0.0.0", port=81, debug = True)
+            Timer(1, open_browser).start()
+            logging.getLogger('werkzeug').disabled = True
+            app.run(
+                host='0.0.0.0', 
+                port=8080, 
+                # debug = True, 
+                use_reloader=False
+            )
+            
+            

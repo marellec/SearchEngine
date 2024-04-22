@@ -7,7 +7,7 @@ def get_cli_options(argv):
     max_pages = None
     max_depth = None
     
-    overwrite = None
+    save_filename_prefix = None
     
     valid = True
     
@@ -38,13 +38,8 @@ def get_cli_options(argv):
                 valid = False
                 
         if len(argv) == 5:
-            
-            if argv[4].lower() in {"true", "false"}:
-                overwrite = (argv[4].lower() == "true")
-            else:
-                print("invalid value for overwrite:", argv[4], sep="")
-                valid = False
+            save_filename_prefix = argv[4]
             
         
         if valid:
-            return (scraping, start_url, max_pages, max_depth, overwrite)
+            return (scraping, start_url, max_pages, max_depth, save_filename_prefix)

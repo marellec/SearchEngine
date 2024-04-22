@@ -3,7 +3,7 @@ __pycache__/
 
 env/
 
-**/test*
+**/_test*
 **/test/
 
 .DS_Store

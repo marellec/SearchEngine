@@ -47,10 +47,28 @@ Libraries (specifics in requirements.txt)
 ### Executing program
 
 * How to run the program
-* Step-by-step bullets
+
+The following 2 search engine apps are available:
+* webapp.py
+* terminal_app.py
+
+To scrape the web to download a new corpus, specify
+seed URL/Domain, max pages, and max depth:
 ```
-code blocks for commands
+python <app> <start_url> <max_pages> <max_depth>
 ```
+
+Optionally, specify a save filename prefix for saving the corpus and index to files:
+```
+python <app> <start_url> <max_pages> <max_depth> -n <save_filename_prefix>
+```
+
+To run the app without downloading a new corpus (and building a new index), simply run:
+```
+python <app> -n <save_filename_prefix>
+```
+This will use the index corresponding to the corpus starting with the given prefix.
+
 
 ## Conclusion
 
@@ -60,6 +78,19 @@ Conclusion - Success/Failure results, outputs, caveats/cautions.
 ### Test Cases
 
 Test Cases - Framework, harness, coverage.
+
+Framework
+
+* PyTest (8.1.1)
+
+Harness
+
+
+
+(+ test files and stuff)
+
+
+Coverage 
 
 
 

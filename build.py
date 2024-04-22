@@ -2,10 +2,9 @@ from indexer.index_utils import build_inverted_index
 from crawling.scrape import scrape
 from documents import check_if_0_documents
 
-def build_search_engine(scraping, start_url, max_pages, max_depth, overwrite=None):
+def build_search_engine(scraping, start_url, max_pages, max_depth, save_filename_prefix=None):
     
-    if overwrite is None:
-        overwrite = True
+    overwrite = True
     
     # scraping = True
     # start_url = 'https://en.wikipedia.org/wiki/List_of_common_misconceptions'
@@ -14,6 +13,11 @@ def build_search_engine(scraping, start_url, max_pages, max_depth, overwrite=Non
     
     corpus_filename = "items.jsonl"
     index_filename = "index.pkl"
+    
+    # save to different file with save_filename_prefix
+    if save_filename_prefix is not None:
+        corpus_filename = save_filename_prefix + corpus_filename
+        index_filename = save_filename_prefix + index_filename
     
 
     if scraping:
