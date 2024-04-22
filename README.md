@@ -2,9 +2,11 @@
 
 Abstract - Development summary, objectives, and next steps.
 
+
 ## Description
 
 Overview - Solution outline, relevant literature, proposed system.
+
 
 ## Design
 
@@ -12,9 +14,12 @@ Design - System capabilities, interactions, integration.
 
 
 
+
 ## Architecture
  
 Architecture - Software components, interfaces, implementation.
+
+
 
 
 
@@ -77,27 +82,12 @@ python <app> <save_filename_prefix>
 ```
 This will use the corpus and corresponding index starting with the given prefix.
 
-<!-- To scrape the web to download a new corpus, specify
-seed URL/Domain, max pages, and max depth:
-```
-python <app> <start_url> <max_pages> <max_depth>
-```
-
-Optionally, specify a save filename prefix for saving the corpus and index to files:
-```
-python <app> <start_url> <max_pages> <max_depth> -n <save_filename_prefix>
-```
-
-To run the app without downloading a new corpus (and building a new index), simply run:
-```
-python <app> -n <save_filename_prefix>
-```
-This will use the index corresponding to the corpus starting with the given prefix. -->
-
 
 ## Conclusion
 
 Conclusion - Success/Failure results, outputs, caveats/cautions.
+
+
 
 
 ### Test Cases
@@ -122,8 +112,17 @@ Coverage
 
 ## Data Sources
 
-Data Sources - Links, downloads, access information.
+Data Sources - Links, downloads, access information. 
 
+Pages are open source.
+
+[Start_url_for_default_build]()
+[Start_url_for_one_test]()
+[Start_url_for_small_test]()
+
+[data_for_default_build]()
+[data_for_one_test]()
+[data_for_small_test](corpus/small_test_items.json)
 
 ## Resources
 

@@ -1,7 +1,7 @@
 import sys
 from indexer.index_utils import build_inverted_index
 from crawling.scrape import scrape
-from documents import check_if_0_documents
+from documents import check_if_0_documents, get_build_from_prefix
 from cli import get_build_cli_options
 
 def build_search_engine(scraping, start_url, max_pages, max_depth, save_filename_prefix=None):
@@ -13,14 +13,7 @@ def build_search_engine(scraping, start_url, max_pages, max_depth, save_filename
     # max_pages = 100
     # max_depth = 3
     
-    corpus_filename = "items.jsonl"
-    index_filename = "index.pkl"
-    
-    # save to different file with save_filename_prefix
-    if save_filename_prefix is not None:
-        corpus_filename = save_filename_prefix + corpus_filename
-        index_filename = save_filename_prefix + index_filename
-    
+    (corpus_filename, index_filename) = get_build_from_prefix(save_filename_prefix)
 
     if scraping:
         scrape(corpus_filename, start_url, max_pages, max_depth, overwrite)

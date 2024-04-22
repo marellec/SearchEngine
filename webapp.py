@@ -18,9 +18,6 @@ import logging
 import webbrowser
 from threading import Timer
 
-app = Flask(__name__)
-
-# template_folder_prefix = "templates/"
 home_filename = "index"
 home_routename = "index"
 view_results_filename = "view_results"
@@ -31,34 +28,11 @@ enter_query_routename = "enter_query"
 def open_browser():
     webbrowser.open_new("http://127.0.0.1:8080")
 
-@app.route("/")
-@app.route("/" + home_routename)
-# @app.route("/" + home_filename + ".html")
-def index():
-    return render_template(home_filename + ".html")
+def set_app_data(app, corpus_filename, index_filename):
+    app.config["corpus_filename"] = corpus_filename
+    app.config["index_filename"] = index_filename
     
-@app.route("/" + enter_query_routename, methods = ["POST", "GET"])
-def enter_query():
-    if request.method == "POST":
-        query_str = request.form["query"]
-        k = request.form["k_value"]
-        try: 
-            k = int(k)
-            valid_k = k > 0
-        except ValueError:
-            return view_results(query_str, k)
-            
-        if valid_k:
-            return redirect(url_for(view_results_routename, query_str=query_str, k=k))
-        else:
-            return view_results(query_str, k)
-            
-    else:
-        return redirect(request.referrer)
-
-@app.route("/" + view_results_routename + "/<query_str>/<int:k>")
-def view_results(query_str, k):
-    
+def get_results(app, query_str, k):
     result_comment = ""
     results = []
     
@@ -83,31 +57,74 @@ def view_results(query_str, k):
                 )
     else:
         result_comment = "Sorry, invalid number of results. Try again!"
-    
-    # results = [
-    #     (1, url_for(home_routename), "this is result 1..." + query_str),
-    #     (2, url_for(home_routename), "this is result 2..." + query_str),
-    #     (3, url_for(home_routename), "this is result 3..." + query_str)
-    # ]
-    
-    return render_template(
-        view_results_filename + ".html", 
-        result_comment=result_comment,
-        query=query_str,
-        k_value=k,
-        results=results
-    )
-    
-@app.route("/" + view_results_routename + "//<int:k>")
-def empty_query(k):
-    return render_template(
-        view_results_filename + ".html", 
-        result_comment="",
-        query="",
-        k_value=k,
-        results=[]
-    )
+        
+    return {
+        "result_comment": result_comment,
+        "results": results
+    }
 
+def create_app(corpus_filename, index_filename):
+    app = Flask(__name__)
+    set_app_data(app, corpus_filename, index_filename)
+
+    
+    @app.route("/")
+    @app.route("/" + home_routename)
+    # @app.route("/" + home_filename + ".html")
+    def index():
+        return render_template(home_filename + ".html")
+        
+    @app.route("/" + enter_query_routename, methods = ["POST", "GET"])
+    def enter_query():
+        if request.method == "POST":
+            query_str = request.form["query"]
+            k = request.form["k_value"]
+            try: 
+                k = int(k)
+                valid_k = k > 0
+            except ValueError:
+                return view_results(query_str, -1)
+                
+            if valid_k:
+                return redirect(url_for(view_results_routename, query_str=query_str, k=k))
+            else:
+                return view_results(query_str, k)
+                
+        else:
+            return redirect(request.referrer)
+        
+    
+
+    @app.route("/" + view_results_routename + "/<query_str>/<int:k>")
+    def view_results(query_str, k):
+        
+        res = get_results(app, query_str, k)
+        
+        # results = [
+        #     (1, url_for(home_routename), "this is result 1..." + query_str),
+        #     (2, url_for(home_routename), "this is result 2..." + query_str),
+        #     (3, url_for(home_routename), "this is result 3..." + query_str)
+        # ]
+        
+        return render_template(
+            view_results_filename + ".html", 
+            result_comment=res["result_comment"],
+            query=query_str,
+            k_value=k,
+            results=res["results"]
+        )
+        
+    @app.route("/" + view_results_routename + "//<int:k>")
+    def empty_query(k):
+        return render_template(
+            view_results_filename + ".html", 
+            result_comment="",
+            query="",
+            k_value=k,
+            results=[]
+        )
+
+    return app
 
 
 if __name__ == "__main__":
@@ -115,8 +132,7 @@ if __name__ == "__main__":
     build = get_run_cli_build(sys.argv)
     if build is not None:
         (corpus_filename, index_filename) = build
-        app.config["corpus_filename"] = corpus_filename
-        app.config["index_filename"] = index_filename
+        app = create_app(corpus_filename, index_filename)
         
         Timer(1, open_browser).start()
         logging.getLogger('werkzeug').disabled = True

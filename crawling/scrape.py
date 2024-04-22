@@ -30,8 +30,8 @@ def scrape(corpus_filename, start_url, max_pages=100, max_depth=3, overwrite=Tru
             
             # allow for more items in case filtering yields less
             
-            'CLOSESPIDER_PAGECOUNT' : min(max_pages + 25, int(max_pages * 1.5)),
-            'CLOSESPIDER_ITEMCOUNT' : min(max_pages + 25, int(max_pages * 1.5)),
+            'CLOSESPIDER_PAGECOUNT' : min(max_pages + 25, int(max_pages * 1.75)),
+            'CLOSESPIDER_ITEMCOUNT' : min(max_pages + 25, int(max_pages * 1.75)),
             
             'DEPTH_LIMIT' : max_depth,
             'LOG_LEVEL': 'CRITICAL',#'DEBUG',
