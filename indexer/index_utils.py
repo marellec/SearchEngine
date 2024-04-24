@@ -7,7 +7,7 @@ from documents import load_documents_text
 import scipy
 
 
-
+# tokenize text
 def temp_tokenizer(text: str) -> list[str]:
     toks = re.split(r"\s", text)
     toks = [
@@ -17,14 +17,13 @@ def temp_tokenizer(text: str) -> list[str]:
     ]
     return toks
 
+# preprocess test
 def temp_preprocessor(text: str) -> str:
     text = text.strip()
     # remove everything except letters, numbers, and '-'
     text = re.sub(r'[^a-zA-Z0-9\-\s]', ' ', text) 
     # apply lowercasing
     text = text.lower() 
-    # remove non-ascii chars
-    text = "".join(ch for ch in text if ord(ch) <= 127) 
     return text
 
 # construct filepath from filename
@@ -46,6 +45,7 @@ def load_inverted_index(index_filename):
     with open(get_save_filepath(index_filename), 'rb') as f:
         return pickle.load(f)
     
+# check if filename for index matches a valid index
 def valid_index(index_filename):
     is_file = os.path.isfile(get_save_filepath(index_filename))
     if is_file:
@@ -61,6 +61,13 @@ def valid_index(index_filename):
             return False
     return False
 
+# given filename for corpus and filename for index
+# - use vectorizer to preprocess/tokenize corpus 
+# - and create vocabulary
+# - and count term occurences and document frequencies 
+# - and compute tf-idf scores
+# - in an inverted index in term-document matrix form
+# save vectorizer and document vector matrix to index file
 def build_inverted_index(corpus_filename, index_filename):
     
     documents = load_documents_text(corpus_filename)
@@ -71,6 +78,7 @@ def build_inverted_index(corpus_filename, index_filename):
         token_pattern=None
     )
 
+    # create vocabulary and compute tf-idf scores for corpus
     doc_vectors = vectorizer.fit_transform(documents)
     
     save_inverted_index(index_filename, (vectorizer, doc_vectors))

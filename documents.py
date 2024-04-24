@@ -2,9 +2,11 @@ import linecache
 import json
 from pathlib import Path
 
+# get filename given filename prefix
 def create_prefix_filename(save_filename_prefix, filename):
     return save_filename_prefix + "_" + filename
 
+# get filename for corpus and filename for index given filename prefix
 def get_build_from_prefix(save_filename_prefix):
     corpus_filename = "items.jsonl"
     index_filename = "index.pkl"
@@ -12,15 +14,6 @@ def get_build_from_prefix(save_filename_prefix):
     if save_filename_prefix is not None:
         corpus_filename = create_prefix_filename(save_filename_prefix, corpus_filename)
         index_filename = create_prefix_filename(save_filename_prefix, index_filename)
-    
-    return (corpus_filename, index_filename)
-
-def get_build_from_prefixes(save_filename_prefix1, save_filename_prefix2):
-    corpus_filename = "items.jsonl"
-    index_filename = "index.pkl"
-    
-    corpus_filename = create_prefix_filename(save_filename_prefix1, corpus_filename)
-    index_filename = create_prefix_filename(save_filename_prefix2, index_filename)
     
     return (corpus_filename, index_filename)
 
@@ -59,8 +52,7 @@ def load_documents_text(corpus_filename):
             documents.append(doc["text"])
         return documents
     
-# get single doctument : dict["url" : str, "text" : str] 
-# from file by index
+# get single `json document : dict["url" : str, "text" : str]` from file by index (given filename for corpus)
 def load_document(corpus_filename, index):
     line = linecache.getline(get_corpus_filepath(corpus_filename), index+1)
     doc = json.loads(line)

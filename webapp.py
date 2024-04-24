@@ -25,13 +25,18 @@ view_results_filename = "view_results"
 view_results_routename = "view_results"
 enter_query_routename = "enter_query"
 
+# open browser in new tab, start webapp
 def open_browser():
     webbrowser.open_new("http://127.0.0.1:8080")
 
+# set app config with data filenames for corpus and index
 def set_app_data(app, corpus_filename, index_filename):
     app.config["corpus_filename"] = corpus_filename
     app.config["index_filename"] = index_filename
     
+# given query string and number of results k
+# - process query and compile list of results to display
+# return result comment text and list of results to display
 def get_results(app, query_str, k):
     result_comment = ""
     results = []
@@ -43,6 +48,7 @@ def get_results(app, query_str, k):
         if top_k_inds_by_score is None: # invalid query
             result_comment = "Sorry, invalid query could not be searched. Try again!"
         else:
+            # get results from corpus file
             for n, i in enumerate(top_k_inds_by_score, 1):
                 doc = load_document(app.config["corpus_filename"], i)
                 results.append((n, doc["url"], doc["text"][:250] + "..."))
@@ -63,17 +69,19 @@ def get_results(app, query_str, k):
         "results": results
     }
 
-def create_app(corpus_filename, index_filename):
+# return search webapp app 
+def create_app():
     app = Flask(__name__)
-    set_app_data(app, corpus_filename, index_filename)
 
-    
+    # page with empty search bar and default k
     @app.route("/")
     @app.route("/" + home_routename)
     # @app.route("/" + home_filename + ".html")
     def index():
         return render_template(home_filename + ".html")
         
+    # page for entering query
+    # - get query form POST json data and go to `view results` page
     @app.route("/" + enter_query_routename, methods = ["POST", "GET"])
     def enter_query():
         if request.method == "POST":
@@ -94,17 +102,13 @@ def create_app(corpus_filename, index_filename):
             return redirect(request.referrer)
         
     
-
+    # given query string and number of results k (may come from url route)
+    # - get results from query processor
+    # page for viewing results
     @app.route("/" + view_results_routename + "/<query_str>/<int:k>")
     def view_results(query_str, k):
         
         res = get_results(app, query_str, k)
-        
-        # results = [
-        #     (1, url_for(home_routename), "this is result 1..." + query_str),
-        #     (2, url_for(home_routename), "this is result 2..." + query_str),
-        #     (3, url_for(home_routename), "this is result 3..." + query_str)
-        # ]
         
         return render_template(
             view_results_filename + ".html", 
@@ -114,6 +118,7 @@ def create_app(corpus_filename, index_filename):
             results=res["results"]
         )
         
+    # page with empty search bar and user-entered k (from url route)
     @app.route("/" + view_results_routename + "//<int:k>")
     def empty_query(k):
         return render_template(
@@ -129,10 +134,15 @@ def create_app(corpus_filename, index_filename):
 
 if __name__ == "__main__":
     
+    # get specific corpus and index from cli arguments
+    # and run search webapp on corpus and index
+    
     build = get_run_cli_build(sys.argv)
     if build is not None:
         (corpus_filename, index_filename) = build
-        app = create_app(corpus_filename, index_filename)
+        
+        app = create_app()
+        set_app_data(app, corpus_filename, index_filename)
         
         Timer(1, open_browser).start()
         logging.getLogger('werkzeug').disabled = True

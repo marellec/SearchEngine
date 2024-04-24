@@ -1,6 +1,7 @@
 from documents import check_if_0_documents, get_build_from_prefix
 from indexer.index_utils import valid_index
 
+# get <start_url> <max_pages> <max_depth> [<save_filename_prefix>] from cli
 def get_build_cli_options(argv):
     scraping = False
     
@@ -45,6 +46,7 @@ def get_build_cli_options(argv):
         if valid:
             return (scraping, start_url, max_pages, max_depth, save_filename_prefix)
         
+# get filename for corpus and filename for index with [<save_filename_prefix>] from cli
 def get_run_cli_build(argv):
     
     save_filename_prefix = None

@@ -13,7 +13,9 @@ def get_corpus_filepath(corpus_filename):
         .joinpath(corpus_filename)
     )
 
-
+# givn filename for corpus, start url, max pages, max depth, and whether to overwrite corpus file
+# - scrape starting at start url, following links up to max pages and max depth
+# save all scraped items to corpus file (jsonl)
 def scrape(corpus_filename, start_url, max_pages=100, max_depth=3, overwrite=True):
     
     print("max pages =", max_pages)

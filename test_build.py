@@ -11,6 +11,7 @@ from indexer.index_utils import valid_index, load_inverted_index
 
 class TestBuild:
 
+    # assert scraping web for downloading corpus and building index work
     def test_build(self):
         
         # build

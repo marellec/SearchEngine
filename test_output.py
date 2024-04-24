@@ -17,46 +17,34 @@ from webapp import (
     view_results_routename,
     enter_query_routename
 )
-from documents import get_build_from_prefix, get_build_from_prefixes
+from documents import get_build_from_prefix
 
+
+# app fixture
 @pytest.fixture()
 def app():
-    
-    corpus_filename = "items.jsonl"
-    index_filename = "index.pkl"
-    
-    app = create_app(corpus_filename, index_filename)
+    app = create_app()
     app.config.update({
         "TESTING": True,
     })
     
     yield app
 
-    # clean up / reset resources here
-
+# client fixture
 @pytest.fixture()
 def client(app):
     return app.test_client()
 
-@pytest.fixture()
-def runner(app):
-    return app.test_cli_runner()
 
 
 
 
-
+# set app config with data filename prefix for corpus and index
 def set_app_data_from_prefix(app, save_filename_prefix):
     (corpus_filename, index_filename) = get_build_from_prefix(save_filename_prefix)
     set_app_data(app, corpus_filename, index_filename)
-    
 
-    
-def set_app_data_from_prefixes(app, save_filename_prefix1, save_filename_prefix2):
-    (corpus_filename, index_filename) = get_build_from_prefixes(save_filename_prefix1, save_filename_prefix2)
-    set_app_data(app, corpus_filename, index_filename)
-
-
+# return url with spaces replaced with "%20"
 def url_spaces(url):
     return re.sub(" ", "%20", url)
 
@@ -118,7 +106,7 @@ class TestSampleSet:
 
 
 
-
+# test processing a valid query
 def test_valid_query(app):
     
     """
@@ -140,6 +128,7 @@ def test_valid_query(app):
     assert result_comment == ""
     assert len(results) == k
 
+# test processing a valid query with k that exceeds results found
 def test_valid_query_k_over(app):
     
     """
@@ -161,6 +150,7 @@ def test_valid_query_k_over(app):
     assert result_comment == "Less than k=11 results found. Showing 10 results."
     assert len(results) == 10
 
+# test processing a valid query that has no results
 def test_valid_query_no_results(app):
     
     """
@@ -181,7 +171,8 @@ def test_valid_query_no_results(app):
     
     assert result_comment == "Sorry, no results found. Try another query!"
     assert len(results) == 0
-    
+
+# test processing an invalid (empty) query
 def test_invalid_query(app):
     
     """
@@ -202,7 +193,8 @@ def test_invalid_query(app):
     
     assert result_comment == "Sorry, invalid query could not be searched. Try again!"
     assert len(results) == 0
-    
+
+# test processing an invalid (negative) k
 def test_invalid_k(app):
     
     """
@@ -225,7 +217,8 @@ def test_invalid_k(app):
     assert len(results) == 0
  
     
-    
+# test that when user enters a query with valid k,
+# results page is displayed
 def test_enter_valid_k(app, client):
     
     """
@@ -254,7 +247,9 @@ def test_enter_valid_k(app, client):
             url_spaces(response.request.path) == 
             url_for(view_results_routename, query_str=query_str, k=k)
         )
-        
+
+# test that when user enters a query with invalid (negative) k,
+# user is redirected to page to re-enter k
 def test_enter_invalid_k_negative(app, client):
     
     """
@@ -283,7 +278,9 @@ def test_enter_invalid_k_negative(app, client):
             url_spaces(response.request.path) == 
             url_for(enter_query_routename)
         )
-        
+
+# test that when user enters a query with invalid (non-integer) k,
+# user is redirected to page to re-enter k
 def test_enter_invalid_k_not_int(app, client):
     
     """
@@ -312,42 +309,3 @@ def test_enter_invalid_k_not_int(app, client):
             url_spaces(response.request.path) == 
             url_for(enter_query_routename)
         )
-        
-
-def test_enter_valid_query(app, client):
-    
-    """
-        10 docs
-    """
-    
-    save_filename_prefix = "small_test"
-    set_app_data_from_prefix(app, save_filename_prefix)
-    
-    
-    query_str = "written language"
-    k = 5
-    
-    with app.app_context(), app.test_request_context():
-        response = client.get(
-            url_for(view_results_routename, query_str=query_str, k=k),
-            follow_redirects=True
-        )
-
-        assert response.status_code == 200
-        
-        
-    
-
-
-
-
-
-# class TestClass1:
-#     value = 0
-
-#     def test_one(self):
-#         self.value = 1
-#         assert self.value == 1
-
-#     # def test_two(self):
-#     #     assert self.value == 1
