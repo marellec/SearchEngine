@@ -24,7 +24,7 @@
     <form action = "{{ url_for("enter_query") }}" method = "POST">
         <p>search here!</p>
         <input type = "text" name = "query" value = "{{ query }}" placeholder="words..." />
-        <input type = "number" name = "k_value" value = {{ k_value }} placeholder="k..." />
+        <input type = "number" name = "k_value" value = {{ k_value }} placeholder="number of results..." />
         <input type = "submit" value = "go" />
     </form>
     <div>

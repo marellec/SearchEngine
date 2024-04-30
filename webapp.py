@@ -4,9 +4,10 @@ from pathlib import Path
 path = str(Path(__file__).parent.parent)
 sys.path.insert(1, path)
 
-from cli import get_run_cli_build
+from build_index import build_if_missing_index
+from cli import get_prefixes_for_index_build
 from processor.query_processor import get_top_k_inds_by_score
-from documents import load_document
+from documents import load_document, get_corpus_filename_from_prefix
 
 from flask import Flask
 from flask import render_template
@@ -26,13 +27,14 @@ view_results_routename = "view_results"
 enter_query_routename = "enter_query"
 
 # open browser in new tab, start webapp
+####    https://stackoverflow.com/questions/54235347/open-browser-automatically-when-python-code-is-executed
 def open_browser():
     webbrowser.open_new("http://127.0.0.1:8080")
 
-# set app config with data filenames for corpus and index
-def set_app_data(app, corpus_filename, index_filename):
-    app.config["corpus_filename"] = corpus_filename
-    app.config["index_filename"] = index_filename
+# set app config with data filename prefixes for trained index builder and search index/search corpus
+def set_app_data(app, trained_corpus_filename_prefix, search_corpus_filename_prefix):
+    app.config["trained_corpus_filename_prefix"] = trained_corpus_filename_prefix
+    app.config["search_corpus_filename_prefix"] = search_corpus_filename_prefix
     
 # given query string and number of results k
 # - process query and compile list of results to display
@@ -43,14 +45,14 @@ def get_results(app, query_str, k):
     
     if k > 0:
         # get results from query processor
-        top_k_inds_by_score = get_top_k_inds_by_score(app.config["index_filename"], query_str, k)
+        top_k_inds_by_score = get_top_k_inds_by_score(app.config["trained_corpus_filename_prefix"], app.config["search_corpus_filename_prefix"], query_str, k)
         
         if top_k_inds_by_score is None: # invalid query
             result_comment = "Sorry, invalid query could not be searched. Try again!"
         else:
             # get results from corpus file
             for n, i in enumerate(top_k_inds_by_score, 1):
-                doc = load_document(app.config["corpus_filename"], i)
+                doc = load_document(get_corpus_filename_from_prefix(app.config["search_corpus_filename_prefix"]), i)
                 results.append((n, doc["url"], doc["text"][:250] + "..."))
             
             if len(results) < k:
@@ -134,23 +136,30 @@ def create_app():
 
 if __name__ == "__main__":
     
-    # get specific corpus and index from cli arguments
-    # and run search webapp on corpus and index
+    # get specific trained index builder and search corpus/index from cli
+    # and run search webapp on them
     
-    build = get_run_cli_build(sys.argv)
-    if build is not None:
-        (corpus_filename, index_filename) = build
+    prms = get_prefixes_for_index_build(sys.argv[1:])
+    if prms is not None:
+        (trained_corpus_filename_prefix, search_corpus_filename_prefix) = prms
         
-        app = create_app()
-        set_app_data(app, corpus_filename, index_filename)
+        success = build_if_missing_index(*prms)
+        if success:
+            print("build successful!")
+        else:
+            print("build unsuccessful.")
         
-        Timer(1, open_browser).start()
-        logging.getLogger('werkzeug').disabled = True
-        app.run(
-            host='0.0.0.0', 
-            port=8080, 
-            # debug = True, 
-            use_reloader=False
-        )
+        if success:
+            app = create_app()
+            set_app_data(app, trained_corpus_filename_prefix, search_corpus_filename_prefix)
+            
+            Timer(1, open_browser).start()
+            logging.getLogger('werkzeug').disabled = True
+            app.run(
+                host='0.0.0.0', 
+                port=8080, 
+                # debug = True, 
+                use_reloader=False
+            )
             
             

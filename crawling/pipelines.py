@@ -10,7 +10,7 @@ class EmptyFilterPipeline:
         if ("text" in item and len(item["text"].strip()) > 0):
             return item
         else:
-            raise DropItem(f"More than max pages")
+            raise DropItem(f"Empty item")
 
 # filter out items that go over max pages
 class MaxPagesPipeline:

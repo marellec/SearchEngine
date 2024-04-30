@@ -18,7 +18,7 @@ class SearchSpider(scrapy.Spider):
     # urls that have been found so far in crawling (prevent re-crawling urls)
     urls_to_visit = set()
     
-    #####   STOLEN FROM https://stackoverflow.com/questions/48042872/python-scrapy-creating-a-crawler-that-gets-a-list-of-urls-and-crawls-them
+    ####    https://stackoverflow.com/questions/48042872/python-scrapy-creating-a-crawler-that-gets-a-list-of-urls-and-crawls-them
     def __init__(self, *args, **kwargs):
         super(SearchSpider, self).__init__(*args, **kwargs)
         self.start_urls = kwargs.get("start_urls")
@@ -36,7 +36,12 @@ class SearchSpider(scrapy.Spider):
         url = response.url
 
         # use justext to extract relevent text data from webpage
-        paragraphs = justext.justext(response.text, justext.get_stoplist("English"))
+        paragraphs = justext.justext(
+            response.text, 
+            justext.get_stoplist("English"),
+            # max_heading_distance=500,
+            # length_low=10
+        )
         paragraphs = [p.text for p in paragraphs if not p.is_boilerplate]
         
         # paragraphs = response.xpath(

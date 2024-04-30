@@ -17,7 +17,6 @@ from webapp import (
     view_results_routename,
     enter_query_routename
 )
-from documents import get_build_from_prefix
 
 
 # app fixture
@@ -39,10 +38,6 @@ def client(app):
 
 
 
-# set app config with data filename prefix for corpus and index
-def set_app_data_from_prefix(app, save_filename_prefix):
-    (corpus_filename, index_filename) = get_build_from_prefix(save_filename_prefix)
-    set_app_data(app, corpus_filename, index_filename)
 
 # return url with spaces replaced with "%20"
 def url_spaces(url):
@@ -51,74 +46,85 @@ def url_spaces(url):
 
 
 
-
+# queries tested for search functionality and result quality
 class TestSampleSet:
 
     def test_query_one(self, app):
         
         """
-            100 docs
+            90 training docs
+            10 test docs
         """
         
-        save_filename_prefix = "one_test"
-        set_app_data_from_prefix(app, save_filename_prefix)
+        trained_corpus_filename_prefix = "big_whale_train"
+        search_corpus_filename_prefix = "small_whale_test"
+        set_app_data(app, trained_corpus_filename_prefix, search_corpus_filename_prefix)
         
         
-        query_str = "uhh"
+        query_str = "people in Africa"
         k = 5
         
         res = get_results(app, query_str, k)
         
-        result_comment = res["result_comment"]
-        results = res["results"]
-        
-        
-        
-    def test_query_one(self, app):
+    def test_query_two(self, app):
         
         """
-            100 docs
+            90 training docs
+            10 test docs
         """
         
-        save_filename_prefix = "one_test"
-        set_app_data_from_prefix(app, save_filename_prefix)
+        trained_corpus_filename_prefix = "big_whale_train"
+        search_corpus_filename_prefix = "small_whale_test"
+        set_app_data(app, trained_corpus_filename_prefix, search_corpus_filename_prefix)
         
         
-        query_str = "uhh"
+        query_str = "fish"
         k = 5
         
         res = get_results(app, query_str, k)
         
-        result_comment = res["result_comment"]
-        results = res["results"]
+    def test_query_three(self, app):
+        
+        """
+            90 training docs
+            10 test docs
+        """
+        
+        trained_corpus_filename_prefix = "big_whale_train"
+        search_corpus_filename_prefix = "small_whale_test"
+        set_app_data(app, trained_corpus_filename_prefix, search_corpus_filename_prefix)
         
         
+        query_str = "animal"
+        k = 5
         
-        
-        
+        res = get_results(app, query_str, k)
 
 
-
-
-
-
-
-
-
-
-# test processing a valid query
+# test processing a valid query with different k values
 def test_valid_query(app):
     
     """
         10 docs
     """
     
-    save_filename_prefix = "small_test"
-    set_app_data_from_prefix(app, save_filename_prefix)
+    trained_corpus_filename_prefix = "small_test"
+    search_corpus_filename_prefix = trained_corpus_filename_prefix
+    set_app_data(app, trained_corpus_filename_prefix, search_corpus_filename_prefix)
     
     
     query_str = "written language"
-    k = 5
+    k = 2
+    
+    res = get_results(app, query_str, k)
+    
+    result_comment = res["result_comment"]
+    results = res["results"]
+    
+    assert result_comment == ""
+    assert len(results) == k
+    
+    k = 3
     
     res = get_results(app, query_str, k)
     
@@ -135,20 +141,21 @@ def test_valid_query_k_over(app):
         10 docs
     """
     
-    save_filename_prefix = "small_test"
-    set_app_data_from_prefix(app, save_filename_prefix)
+    trained_corpus_filename_prefix = "small_test"
+    search_corpus_filename_prefix = trained_corpus_filename_prefix
+    set_app_data(app, trained_corpus_filename_prefix, search_corpus_filename_prefix)
     
     
     query_str = "written language"
-    k = 11
+    k = 5
     
     res = get_results(app, query_str, k)
     
     result_comment = res["result_comment"]
     results = res["results"]
     
-    assert result_comment == "Less than k=11 results found. Showing 10 results."
-    assert len(results) == 10
+    assert result_comment == "Less than k=5 results found. Showing 3 results."
+    assert len(results) == 3
 
 # test processing a valid query that has no results
 def test_valid_query_no_results(app):
@@ -157,8 +164,9 @@ def test_valid_query_no_results(app):
         10 docs
     """
     
-    save_filename_prefix = "small_test"
-    set_app_data_from_prefix(app, save_filename_prefix)
+    trained_corpus_filename_prefix = "small_test"
+    search_corpus_filename_prefix = trained_corpus_filename_prefix
+    set_app_data(app, trained_corpus_filename_prefix, search_corpus_filename_prefix)
     
     
     query_str = "hi"
@@ -179,8 +187,9 @@ def test_invalid_query(app):
         10 docs
     """
     
-    save_filename_prefix = "small_test"
-    set_app_data_from_prefix(app, save_filename_prefix)
+    trained_corpus_filename_prefix = "small_test"
+    search_corpus_filename_prefix = trained_corpus_filename_prefix
+    set_app_data(app, trained_corpus_filename_prefix, search_corpus_filename_prefix)
     
     
     query_str = ""
@@ -201,8 +210,9 @@ def test_invalid_k(app):
         10 docs
     """
     
-    save_filename_prefix = "small_test"
-    set_app_data_from_prefix(app, save_filename_prefix)
+    trained_corpus_filename_prefix = "small_test"
+    search_corpus_filename_prefix = trained_corpus_filename_prefix
+    set_app_data(app, trained_corpus_filename_prefix, search_corpus_filename_prefix)
     
     
     query_str = "written language"
@@ -225,12 +235,13 @@ def test_enter_valid_k(app, client):
         10 docs
     """
     
-    save_filename_prefix = "small_test"
-    set_app_data_from_prefix(app, save_filename_prefix)
+    trained_corpus_filename_prefix = "small_test"
+    search_corpus_filename_prefix = trained_corpus_filename_prefix
+    set_app_data(app, trained_corpus_filename_prefix, search_corpus_filename_prefix)
     
     
     query_str = "written language"
-    k = 5
+    k = 4
     
     with app.app_context(), app.test_request_context():
         response = client.post(
@@ -256,8 +267,9 @@ def test_enter_invalid_k_negative(app, client):
         10 docs
     """
     
-    save_filename_prefix = "small_test"
-    set_app_data_from_prefix(app, save_filename_prefix)
+    trained_corpus_filename_prefix = "small_test"
+    search_corpus_filename_prefix = trained_corpus_filename_prefix
+    set_app_data(app, trained_corpus_filename_prefix, search_corpus_filename_prefix)
     
     
     query_str = "written language"
@@ -287,8 +299,9 @@ def test_enter_invalid_k_not_int(app, client):
         10 docs
     """
     
-    save_filename_prefix = "small_test"
-    set_app_data_from_prefix(app, save_filename_prefix)
+    trained_corpus_filename_prefix = "small_test"
+    search_corpus_filename_prefix = trained_corpus_filename_prefix
+    set_app_data(app, trained_corpus_filename_prefix, search_corpus_filename_prefix)
     
     
     query_str = "written language"

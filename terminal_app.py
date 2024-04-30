@@ -1,9 +1,12 @@
 import sys
-from cli import get_run_cli_build
+from cli import get_prefixes_for_index_build
+from build_index import build_if_missing_index
 from processor.query_processor import get_top_k_inds_by_score
-from documents import load_document
+from documents import load_document, get_corpus_filename_from_prefix
     
-def run(corpus_filename, index_filename):
+def run(trained_corpus_filename_prefix, search_corpus_filename_prefix):
+    
+    search_corpus_filename = get_corpus_filename_from_prefix(search_corpus_filename_prefix)
     
     cont = True
     
@@ -27,7 +30,7 @@ def run(corpus_filename, index_filename):
         # k = 5
         
             
-        top_k_inds_by_score = get_top_k_inds_by_score(index_filename, query_str, k)
+        top_k_inds_by_score = get_top_k_inds_by_score(trained_corpus_filename_prefix, search_corpus_filename_prefix, query_str, k)
         
         if top_k_inds_by_score is None: # invalid query
             print("\nsorry, invalid query could not be searched. try again!")
@@ -42,7 +45,7 @@ def run(corpus_filename, index_filename):
                 )
         
             for n, i in enumerate(top_k_inds_by_score, 1):
-                doc = load_document(corpus_filename, i)
+                doc = load_document(search_corpus_filename, i)
                 print("\nresult ", n, ":", "\t", doc["url"], " [", i+1, "]", sep="")
                 print("\n", doc["text"][:500], "...", sep="")
                 
@@ -52,7 +55,15 @@ def run(corpus_filename, index_filename):
         
 if __name__ == "__main__":
     
-    build = get_run_cli_build(sys.argv)
-    if build is not None:
-        (corpus_filename, index_filename) = build
-        run(corpus_filename, index_filename)
+    prms = get_prefixes_for_index_build(sys.argv[1:])
+    if prms is not None:
+        (trained_corpus_filename_prefix, search_corpus_filename_prefix) = prms
+        
+        success = build_if_missing_index(*prms)
+        if success:
+            print("build successful!")
+        else:
+            print("build unsuccessful.")
+        
+        if success:
+            run(trained_corpus_filename_prefix, search_corpus_filename_prefix)

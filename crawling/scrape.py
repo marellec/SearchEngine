@@ -13,7 +13,7 @@ def get_corpus_filepath(corpus_filename):
         .joinpath(corpus_filename)
     )
 
-# givn filename for corpus, start url, max pages, max depth, and whether to overwrite corpus file
+# given filename for corpus, start url, max pages, max depth, and whether to overwrite corpus file
 # - scrape starting at start url, following links up to max pages and max depth
 # save all scraped items to corpus file (jsonl)
 def scrape(corpus_filename, start_url, max_pages=100, max_depth=3, overwrite=True):
@@ -40,8 +40,8 @@ def scrape(corpus_filename, start_url, max_pages=100, max_depth=3, overwrite=Tru
                 # min(max_pages + 25, int(max_pages * 1.75)),
             
             'DEPTH_LIMIT' : max_depth,
-            'LOG_LEVEL': 'CRITICAL',#'DEBUG',
-            'FEEDS': {
+            'LOG_LEVEL' : 'CRITICAL',#'DEBUG',
+            'FEEDS' : {
                 get_corpus_filepath(corpus_filename): {
                     'format': 'jsonl',
                     'encoding': 'utf8',
@@ -52,7 +52,7 @@ def scrape(corpus_filename, start_url, max_pages=100, max_depth=3, overwrite=Tru
                 },
             },
             'max_pages' : max_pages,
-            'ITEM_PIPELINES': {
+            'ITEM_PIPELINES' : {
                 "crawling.pipelines.EmptyFilterPipeline": 100,
                 "crawling.pipelines.MaxPagesPipeline": 200,
             },
@@ -61,8 +61,7 @@ def scrape(corpus_filename, start_url, max_pages=100, max_depth=3, overwrite=Tru
     
     process.crawl(
         crawler.SearchSpider, 
-        start_urls=[start_url],
-        max_depth=max_depth
+        start_urls=[start_url]
     )
     process.start()
     
