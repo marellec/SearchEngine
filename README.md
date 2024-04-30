@@ -16,7 +16,7 @@ The web application forwards the user's query and k value to the query processor
 
 ## Design
 
-![Search engine design](Design.svg "Search engine design")
+![Search engine design](design.svg "Search engine design")
 
 
 ## Architecture
